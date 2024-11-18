@@ -1,0 +1,50 @@
+{% extends 'base.html' %}
+
+{% block title %}Property Management{% endblock %}
+{% block header %}Add Property Details{% endblock %}
+{% block content %}
+    <form method="POST" action="{{ url_for('add_property') }}">
+        <div class="row mb-3">
+            <div class="col-sm-2"><label for="property_id">Property Id:</label></div>
+            <div class="col-sm-1"><input type="text" id="property_id" name="property_id" required></div>
+        </div>
+
+        <div class="row mb-3">
+            <div class="col-sm-2"><label for="building_name">Building Name:</label></div>
+            <div class="col-sm-1"><input type="text" id="building_name" name="building_name" required></div>
+        </div>
+
+        <div class="row mb-3">
+            <div class="col-sm-2"><label for="unit_no">Unit No:</label></div>
+            <div class="col-sm-1"><input type="text" id="unit_no" name="unit_no" required></div>
+        </div>
+
+        <div class="row mb-3">
+            <div class="col-sm-2"><label for="bedrooms">Number of Bedrooms:</label></div>
+            <div class="col-sm-1"><input type="number" id="bedrooms" name="bedrooms" required></div>
+        </div>
+
+        <div class="row mb-3">
+            <div class="col-sm-2"><label for="square_feet">Square Feet:</label></div>
+            <div class="col-sm-1"><input type="number" id="square_feet" name="square_feet" required></div>
+        </div>
+
+        <div class="row mb-3">
+            <div class="col-sm-2"><label for="price">Price:</label></div>
+            <div class="col-sm-1"><input type="number" id="price" name="price" required></div>
+        </div>
+
+        <div class="row mb-3">
+            <div class="col-sm-2"><label for="owner_id">Owner ID:</label></div>
+            <div class="col-sm-1">
+                <select id="owner_id" name="owner_id" required>
+                    {% for investor in investors %}
+                        <option value="{{ investor.id }}">{{ investor.name }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+        </div>
+
+        <button type="submit" class="btn btn-primary">Add Property</button>
+    </form>
+{% endblock %}

@@ -1,0 +1,38 @@
+{% extends 'base.html' %}
+
+{% block title %}Property Management{% endblock %}
+{% block header %}Properties{% endblock %}
+
+{% block content %}
+{% for investor in investors %}
+<h2>{{ investor.name }}</h2>
+<table class="table table-striped table-sm">
+    <thead>
+        <tr>
+            <th scope="col">Property ID</th>
+            <th scope="col">Building Name</th>
+            <th scope="col">Unit No</th>
+            <th scope="col">No of Bedroom</th>
+            <th scope="col">Size</th>
+            <th scope="col">Price</th>
+            <th scope="col">Rent Amount</th>
+          </tr>
+    </thead>
+    <tbody>
+        {% for property in investor.properties %}
+            {% for tenant in property.tenant %}
+            <tr>
+                <td><a href="/view_property/{{ property.id }}">{{ property.id }}</a></td>
+                <td>{{ property.building_name }}</td>
+                <td>{{ property.unit_no }}</td>
+                <td>{{ property.bedrooms }}</td>
+                <td>{{ property.square_feet }}</td>
+                <td>{{ property.price }}</td>
+                <td>{{ tenant.rental_amount }}</td>
+            </tr>
+            {% endfor %}
+        {% endfor %}
+    </tbody>
+</table>
+{% endfor %}
+{% endblock %}

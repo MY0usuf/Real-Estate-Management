@@ -1,0 +1,19 @@
+<h2>Landlords</h2>
+<table>
+    <thead>
+        <tr>
+            <th>Name</th>
+            <th>Email</th>
+            <th>Properties</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for landlord in landlords %}
+        <tr>
+            <td>{{ landlord.name }}</td>
+            <td>{{ landlord.email }}</td>
+            <td>{{ landlord.properties }}</td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>

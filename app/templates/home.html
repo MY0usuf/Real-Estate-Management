@@ -1,0 +1,32 @@
+{% extends 'base.html' %}
+
+{% block title %}Property Management{% endblock %}
+{% block header %}Dashboard{% endblock %}
+
+{% block content %}
+        {% if current_user.is_authenticated %}
+            <h1>Hello, {{ current_user.name }}!</h1>
+        {% else %}
+            <p>You are not logged in.</p>
+            <a href="{{ url_for('login') }}">Login</a>
+        {% endif %}
+
+        
+        <ul>
+            {% for investor in investors %}
+                <li>
+                    <strong>{{ investor.name }}</strong>
+                    <br>
+                    <a href="/delete_investor/{{ investor.id }}">Delete Investor</a>
+                    <br>
+                    Properties Owned:
+                    <ul>
+                        {% for property in investor.properties %}
+                            <li>{{ property.address }} - Bedrooms: {{ property.bedrooms }} | Square Feet: {{ property.square_feet }} | Price: {{ property.price }}</li>
+                        {% endfor %}
+                    </ul>
+                </li>
+            {% endfor %}
+        </ul>
+
+{% endblock %}

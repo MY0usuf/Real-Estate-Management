@@ -1,0 +1,11 @@
+{% extends 'base.html' %}
+
+{% block title %}Property Management{% endblock %}
+{% block header %}Delete Investor Details{% endblock %}
+{% block content %}
+    <p>Are you sure you want to delete investor {{ investor.name }}?</p>
+    <form method="POST">
+        <button type="submit" class="btn btn-primary">Yes, delete</button>
+    </form>
+    <a href="{{ url_for('home') }}">Cancel</a>
+{% endblock %}

@@ -1,0 +1,21 @@
+{% extends 'base.html' %}
+
+{% block title %}Tenant Details{% endblock %}
+{% block header %}Tenant Details{% endblock %}
+
+{% block content %}
+<h2>{{ tenant.name }}</h2>
+<p>Contact Number: {{ tenant.contact_number }}</p>
+<p>Email Address: {{ tenant.email_address }}</p>
+<p>Passport Number: {{ tenant.passport_number }}</p>
+<p>Emirates ID Number: {{ tenant.emirates_id_number }}</p>
+<p>Contract Start Date: {{ tenant.contract_start_date }}</p>
+<p>Contract End Date: {{ tenant.contract_end_date }}</p>
+<p>No of Cheques: {{ tenant.no_of_cheques }}</p>
+<p>Rental Amount (AED): {{ tenant.rental_amount }}</p>
+<p>Security Deposit (AED): {{ tenant.security_deposit }}</p>
+
+<!-- Add more tenant details as needed -->
+
+<a href="{{ url_for('renew_tenant', tenant_id=tenant.id) }}">Renew Tenant</a>
+{% endblock %}

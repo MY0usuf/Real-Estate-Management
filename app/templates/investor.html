@@ -1,0 +1,13 @@
+{% extends 'base.html' %}
+
+{% block title %}Property Management{% endblock %}
+{% block header %}Investors{% endblock %}
+
+{% block content %}
+{% for investor in investors %}
+<strong>{{ investor.name }}</strong>
+<br>
+<a href="/delete_investor/{{ investor.id }}">Delete Investor</a>
+<br>
+{% endfor %}
+{% endblock %}

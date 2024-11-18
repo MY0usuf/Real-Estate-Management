@@ -1,0 +1,22 @@
+{% extends 'base.html' %}
+
+{% block title %}Renew Tenant{% endblock %}
+{% block header %}Renew Tenant{% endblock %}
+
+{% block content %}
+<form method="POST">
+    <label for="new_rental_amount">New Rental Amount:</label>
+    <input type="text" id="new_rental_amount" name="new_rental_amount" value="{{ tenant.rental_amount }}" required>
+    <br>
+
+    <label for="new_contract_start_date">New Contract Start Date:</label>
+    <input type="text" id="new_contract_start_date" name="new_contract_start_date" value="{{ tenant.contract_start_date }}" required>
+    <br>
+
+    <label for="new_contract_end_date">New Contract End Date:</label>
+    <input type="text" id="new_contract_end_date" name="new_contract_end_date" value="{{ tenant.contract_end_date }}" required>
+    <br>
+
+    <button type="submit">Renew Tenant</button>
+</form>
+{% endblock %}

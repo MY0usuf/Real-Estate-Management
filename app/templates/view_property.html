@@ -1,0 +1,29 @@
+{% extends 'base.html' %}
+
+{% block title %}Property Details{% endblock %}
+{% block header %}Property Details{% endblock %}
+
+{% block content %}
+<h2>{{ property.id }}</h2>
+<p>Building Name {{ property.building_name }}</p>
+<p>Unit No: {{ property.unit_no }}</p>
+<p>Size (Sq.Ft): {{ property.square_feet }}</p>
+<p>No of Bedrooms: {{ property.bedrooms }}</p>
+<p>Original Price (AED): {{ property.price }}</p>
+<hr>
+{% for tenant in property.tenant %}
+    <h1>Current Tenant</h1>
+    <h2>{{ tenant.name }}</h2>
+    <p>Contact Number: {{ tenant.contact_number }}</p>
+    <p>Email Address: {{ tenant.email_address }}</p>
+    <p>Passport Number: {{ tenant.passport_number }}</p>
+    <p>Emirates ID Number: {{ tenant.emirates_id_number }}</p>
+    <p>Contract Start Date: {{ tenant.contract_start_date }}</p>
+    <p>Contract End Date: {{ tenant.contract_end_date }}</p>
+    <p>No of Cheques: {{ tenant.no_of_cheques }}</p>
+    <p>Rental Amount (AED): {{ tenant.rental_amount }}</p>
+    <p>Security Deposit (AED): {{ tenant.security_deposit }}</p>
+{% endfor %}
+<!-- Add more tenant details as needed -->
+
+{% endblock %}

@@ -1,0 +1,19 @@
+{% extends 'base.html' %}
+
+{% block title %}Property Management{% endblock %}
+{% block header %}Add Investor Details{% endblock %}
+{% block content %}
+    <form method="POST" action="{{ url_for('add_investor') }}">
+        <div class="row mb-3">
+            <div class="col-sm-2"><label for="id">Investor ID:</label></div>
+            <div class="col-sm-2"><input type="text" id="id" name="id" required></div>
+        </div>
+
+        <div class="row mb-3">
+            <div class="col-sm-2"><label for="name">Investor Name:</label></div>
+            <div class="col-sm-2"><input type="text" id="name" name="name" required></div>
+        </div>
+
+        <button type="submit" class="btn btn-primary">Add Investor</button>
+    </form>
+{% endblock %}
