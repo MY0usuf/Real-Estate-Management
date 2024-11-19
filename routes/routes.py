@@ -1,4 +1,4 @@
-from flask import render_template, request, redirect, url_for, session
+from flask import flash, render_template, request, redirect, url_for, session
 import os
 from flask_login import LoginManager, login_user, login_required, logout_user, current_user
 from main import app, db
@@ -24,7 +24,10 @@ def login():
         user = User.query.filter_by(username=username).first()
         if user and user.password == password:
             login_user(user)
+            flash('Login successful', 'success')
             return redirect(url_for('home'))
+        else:
+            flash('Invalid username or password', 'danger')
 
     return render_template('login.html')
 @app.route('/logout')
@@ -32,6 +35,7 @@ def login():
 def logout():
     logout_user()
     session.clear()
+    flash('You have been logged out', 'info')
     return redirect(url_for('login'))
 
 @app.route('/register', methods=['GET', 'POST'])
@@ -44,6 +48,7 @@ def register():
 
         # Check if the username is unique (you may want to enhance this)
         if User.query.filter_by(username=username).first():
+            flash('Username already exists. Please choose another.', 'danger')
             return render_template('register.html', message='Username already exists. Please choose another.')
 
         # Create a new user
@@ -54,6 +59,7 @@ def register():
         db.session.commit()
 
         session['username'] = username  # Log in the user after registration
+        flash('Registration successful. Welcome!', 'success')
         return redirect(url_for('home'))
 
     return render_template('register.html')
@@ -68,15 +74,19 @@ def home():
     tenants = Tenant.query.all()
     return render_template('home.html', investors=investors, properties=properties, tenants=tenants)
 
+from flask import flash, redirect, url_for
+
 @app.route('/upload_file/<entity_type>/<entity_id>', methods=['POST'])
 @login_required
 def upload_file(entity_type, entity_id):
     if 'file' not in request.files:
-        return 'No file part', 400
+        flash('No file part', 'danger')
+        return redirect(request.referrer)
 
     file = request.files['file']
     if file.filename == '':
-        return 'No selected file', 400
+        flash('No selected file', 'danger')
+        return redirect(request.referrer)
 
     if file and allowed_file(file.filename):
         entity_type = entity_type.lower()
@@ -86,20 +96,23 @@ def upload_file(entity_type, entity_id):
         if entity_type == 'property':
             property_obj = Property.query.get(entity_id)
             if not property_obj:
-                return 'Property not found', 404
+                flash('Property not found', 'danger')
+                return redirect(request.referrer)
 
-            investor_id = property_obj.owner_id  # Assuming Property has owner_id
+            investor_id = property_obj.owner_id
             upload_folder = os.path.join(base_path, current_user.name, f'{investor_id}', f'{entity_id}')
         
         elif entity_type == 'tenant':
             tenant_obj = Tenant.query.get(entity_id)
             if not tenant_obj:
-                return 'Tenant not found', 404
+                flash('Tenant not found', 'danger')
+                return redirect(request.referrer)
 
-            property_id = tenant_obj.property_id  # Assuming Tenant has property_id
+            property_id = tenant_obj.property_id
             property_obj = Property.query.get(property_id)
             if not property_obj:
-                return 'Property for tenant not found', 404
+                flash('Property for tenant not found', 'danger')
+                return redirect(request.referrer)
 
             investor_id = property_obj.owner_id
             upload_folder = os.path.join(base_path, current_user.name, f'{investor_id}', f'{property_id}', f'{entity_id}')
@@ -108,7 +121,8 @@ def upload_file(entity_type, entity_id):
             upload_folder = os.path.join(base_path, current_user.name, f'{entity_id}')
         
         else:
-            return 'Invalid entity type', 400
+            flash('Invalid entity type', 'danger')
+            return redirect(request.referrer)
 
         os.makedirs(upload_folder, exist_ok=True)
 
@@ -119,9 +133,11 @@ def upload_file(entity_type, entity_id):
         # Optional: Save the file path in the database
         # db.session.commit()
 
-        return 'File uploaded successfully', 200
-    return 'Invalid file type', 400
-
+        flash('File uploaded successfully!', 'success')
+        return redirect(request.referrer)
+    
+    flash('Invalid file type', 'danger')
+    return redirect(request.referrer)
 
 
 #<------------------------------------------------INVESTORS ROUTES--------------------------------------------------------------------->

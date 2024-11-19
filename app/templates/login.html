@@ -108,6 +108,15 @@
   <body class="text-center">
     
 <main class="form-signin w-100 m-auto">
+  {% with messages = get_flashed_messages(with_categories=true) %}
+  {% if messages %}
+    <div>
+      {% for category, message in messages %}
+        <div class="alert alert-{{ category }}">{{ message }}</div>
+      {% endfor %}
+    </div>
+  {% endif %}
+  {% endwith %}
   <form method="post" action="{{ url_for('login') }}">
     <h1 class="h3 mb-3 fw-normal">Please sign in</h1>
 
