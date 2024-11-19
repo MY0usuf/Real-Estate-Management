@@ -84,6 +84,9 @@ def upload_file(entity_type, entity_id):
         return redirect(request.referrer)
 
     file = request.files['file']
+    custom_filename = request.form.get('filename', '')
+    file_tag = request.form['file_tag']
+
     if file.filename == '':
         flash('No selected file', 'danger')
         return redirect(request.referrer)
@@ -91,6 +94,8 @@ def upload_file(entity_type, entity_id):
     if file and allowed_file(file.filename):
         entity_type = entity_type.lower()
         base_path = app.config['UPLOAD_FOLDER']
+
+        new_filename = custom_filename if custom_filename else file.filename
 
         # Determine the correct folder path based on entity type and hierarchy
         if entity_type == 'property':
@@ -100,7 +105,7 @@ def upload_file(entity_type, entity_id):
                 return redirect(request.referrer)
 
             investor_id = property_obj.owner_id
-            upload_folder = os.path.join(base_path, current_user.name, f'{investor_id}', f'{entity_id}')
+            upload_folder = os.path.join(base_path, current_user.name, f'{investor_id}', f'{entity_id}', file_tag)
         
         elif entity_type == 'tenant':
             tenant_obj = Tenant.query.get(entity_id)
@@ -115,10 +120,10 @@ def upload_file(entity_type, entity_id):
                 return redirect(request.referrer)
 
             investor_id = property_obj.owner_id
-            upload_folder = os.path.join(base_path, current_user.name, f'{investor_id}', f'{property_id}', f'{entity_id}')
+            upload_folder = os.path.join(base_path, current_user.name, f'{investor_id}', f'{property_id}', f'{entity_id}', file_tag)
         
         elif entity_type == 'investor':
-            upload_folder = os.path.join(base_path, current_user.name, f'{entity_id}')
+            upload_folder = os.path.join(base_path, current_user.name, f'{entity_id}', file_tag)
         
         else:
             flash('Invalid entity type', 'danger')
@@ -127,7 +132,7 @@ def upload_file(entity_type, entity_id):
         os.makedirs(upload_folder, exist_ok=True)
 
         # Save the file
-        filename = os.path.join(upload_folder, file.filename)
+        filename = os.path.join(upload_folder, new_filename)
         file.save(filename)
 
         # Optional: Save the file path in the database
