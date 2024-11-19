@@ -4,75 +4,60 @@
 {% block header %}Add Tenant Details{% endblock %}
 {% block content %}
 
-    <form method="POST">
-            <div class="row mb-3">
-                <div class="col-sm-2"><label for="tenant_id">Tenant Id:</label></div>
-                <div class="col-sm-1"><input type="text" id="tenant_id" name="tenant_id" required></div>
-            </div>
-
-            <div class="row mb-3">
-                <div class="col-sm-2"><label for="name">Name:</label></div>
-                <div class="col-sm-1"><input type="text" id="name" name="name" required></div>           
-            </div>
-
-            <div class="row mb-3">
-                <div class="col-sm-2"><label for="contact_number">Contact Number:</label></div>
-                <div class="col-sm-1"><input type="text" id="contact_number" name="contact_number" required></div>
-            </div>
-
-            <div class="row mb-3">
-                <div class="col-sm-2"><label for="email_address">Email Address:</label></div>
-                <div class="col-sm-1"><input type="text" id="email_address" name="email_address" required></div>
-            </div>
-
-            <div class="row mb-3">
-                <div class="col-sm-2"><label for="passport_number">Passport Number</label></div>
-                <div class="col-sm-1"><input type="text" id="passport_number" name="passport_number" required></div>
-            </div>
-
-            <div class="row mb-3">
-                <div class="col-sm-2"><label for="emirates_id_number">Emirates Id Number:</label></div>
-                <div class="col-sm-1"><input type="text" id="emirates_id_number" name="emirates_id_number" required></div>
-            </div>
-
-            <div class="row mb-3">
-                <div class="col-sm-2"><label for="contract_start_date">Contract Start Date</label></div>
-                <div class="col-sm-1"><input type="date" id="contract_start_date" name="contract_start_date" required></div>
-            </div>
-
-            <div class="row mb-3">
-                <div class="col-sm-2"><label for="contract_end_date">Contract End Date</label></div>
-                <div class="col-sm-1"><input type="date" id="contract_end_date" name="contract_end_date" required></div>
-            </div>
-
-            <div class="row mb-3">
-                <div class="col-sm-2"><label for="no_of_cheques">No of Cheques</label></div>
-                <div class="col-sm-1"><input type="text" id="no_of_cheques" name="no_of_cheques" required></div>
-            </div>
-
-            <div class="row mb-3">
-                <div class="col-sm-2"><label for="rental_amount">Rental Amount</label></div>
-                <div class="col-sm-1"><input type="text" id="rental_amount" name="rental_amount" required></div>
-            </div>
-
-            <div class="row mb-3">
-                <div class="col-sm-2"><label for="security_deposit">Security Deposit</label></div>
-                <div class="col-sm-1"><input type="text" id="security_deposit" name="security_deposit" required></div>
-            </div>
-
-            <!-- Add other input fields for tenant details -->
-
-            <div class="row mb-3">
-                <div class="col-sm-2"><label for="property_id">Select Property:</label></div>
-                <div class="col-sm-1">
-                    <select id="property_id" name="property_id" required>
-                    {% for property in properties %}
-                        <option value="{{ property.id }}">{{ property.id }}</option>
-                    {% endfor %}
-                    </select>
-                </div>
-            </div>
-
+    <form method="POST" class="row g-3">
+        <div class="col-12">
+            <label for="name" class="form-label">Name</label>
+            <input type="text" class="form-control" id="name" name="name" placeholder="John Doe">
+        </div>
+        <div class="col-md-6">
+          <label for="contact_number" class="form-label">Contact No</label>
+          <input type="text" class="form-control" id="contact_number" name="contact_number" placeholder="+971 50 100 1000">
+        </div>
+        <div class="col-md-6">
+          <label for="email_address" class="form-label">Email Address</label>
+          <input type="email" class="form-control" id="email_address" name="email_address">
+        </div>
+        <div class="col-md-6">
+            <label for="passport_number" class="form-label">Passport No</label>
+            <input type="text" class="form-control" id="passport_number" name="passport_number">
+        </div>
+          <div class="col-md-6">
+            <label for="emirates_id_number" class="form-label">Emirates ID Number</label>
+            <input type="email" class="form-control" id="emirates_id_number" name="emirates_id_number">
+        </div>
+        <div class="col-md-6">
+            <label for="contract_start_date" class="form-label">Contract Start Date</label>
+            <input type="date" class="form-control" id="contract_start_date" name="contract_start_date">
+        </div>
+          <div class="col-md-6">
+            <label for="contract_end_date" class="form-label">Contract End Date</label>
+            <input type="date" class="form-control" id="contract_end_date" name="contract_end_date">
+        </div>
+        <div class="col-md-6">
+            <label for="rental_amount" class="form-label">Rental Amount</label>
+            <input type="tex" class="form-control" id="rental_amount" name="rental_amount">
+        </div>
+        <div class="col-md-3">
+            <label for="no_of_cheques" class="form-label">No Of Cheques</label>
+            <input type="text" class="form-control" id="no_of_cheques" name="no_of_cheques">
+        </div>
+        <div class="col-md-3">
+            <label for="security_deposit" class="form-label">Deposit</label>
+            <input type="tex" class="form-control" id="security_deposit" name="security_deposit">
+        </div>
+        <div class="col-md-4">
+          <label for="inputState" class="form-label">Property</label>
+          <select id="property_id" name="property_id" class="form-select" required>
+            {% for property in properties %}
+                <option value="{{ property.id }}">{{ property.id }}</option>
+            {% endfor %}
+          </select>
+        </div>
+        <div class="col-md-4">
+            <label for="tenant_id" class="form-label">Tenant ID</label>
+            <input type="tex" class="form-control" id="tenant_id" name="tenant_id" required>
+        </div>
         <button type="submit" class="btn btn-primary">Add Tenant</button>
-    </form>
+      </form>
+
 {% endblock %}
