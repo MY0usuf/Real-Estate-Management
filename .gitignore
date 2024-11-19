@@ -3,6 +3,5 @@ instance/
 uploads/
 __pycache__/
 *.pyc
-*.pyc
 *.db
 routes/__pycache__/routes.cpython-312.pyc
