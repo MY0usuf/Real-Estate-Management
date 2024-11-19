@@ -1,0 +1,5 @@
+# Ignore the instance folder and its contents
+instance/
+uploads/
+__pycache__/
+*.pyc

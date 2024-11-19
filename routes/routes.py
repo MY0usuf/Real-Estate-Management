@@ -1,4 +1,5 @@
 from flask import render_template, request, redirect, url_for, session
+import os
 from flask_login import LoginManager, login_user, login_required, logout_user, current_user
 from main import app, db
 from models.models import User, Investor, Tenant, Property
@@ -9,6 +10,10 @@ login_manager.login_view = 'login'
 @login_manager.user_loader
 def load_user(user_id):
     return User.query.get(int(user_id))
+
+def allowed_file(filename):
+    return '.' in filename and filename.rsplit('.', 1)[1].lower() in app.config['ALLOWED_EXTENSIONS']
+
 
 # ----------------------------------------User Authentication Routes----------------------------------
 @app.route('/login', methods=['GET', 'POST'])
@@ -63,6 +68,62 @@ def home():
     tenants = Tenant.query.all()
     return render_template('home.html', investors=investors, properties=properties, tenants=tenants)
 
+@app.route('/upload_file/<entity_type>/<entity_id>', methods=['POST'])
+@login_required
+def upload_file(entity_type, entity_id):
+    if 'file' not in request.files:
+        return 'No file part', 400
+
+    file = request.files['file']
+    if file.filename == '':
+        return 'No selected file', 400
+
+    if file and allowed_file(file.filename):
+        entity_type = entity_type.lower()
+        base_path = app.config['UPLOAD_FOLDER']
+
+        # Determine the correct folder path based on entity type and hierarchy
+        if entity_type == 'property':
+            property_obj = Property.query.get(entity_id)
+            if not property_obj:
+                return 'Property not found', 404
+
+            investor_id = property_obj.owner_id  # Assuming Property has owner_id
+            upload_folder = os.path.join(base_path, current_user.name, f'{investor_id}', f'{entity_id}')
+        
+        elif entity_type == 'tenant':
+            tenant_obj = Tenant.query.get(entity_id)
+            if not tenant_obj:
+                return 'Tenant not found', 404
+
+            property_id = tenant_obj.property_id  # Assuming Tenant has property_id
+            property_obj = Property.query.get(property_id)
+            if not property_obj:
+                return 'Property for tenant not found', 404
+
+            investor_id = property_obj.owner_id
+            upload_folder = os.path.join(base_path, current_user.name, f'{investor_id}', f'{property_id}', f'{entity_id}')
+        
+        elif entity_type == 'investor':
+            upload_folder = os.path.join(base_path, current_user.name, f'{entity_id}')
+        
+        else:
+            return 'Invalid entity type', 400
+
+        os.makedirs(upload_folder, exist_ok=True)
+
+        # Save the file
+        filename = os.path.join(upload_folder, file.filename)
+        file.save(filename)
+
+        # Optional: Save the file path in the database
+        # db.session.commit()
+
+        return 'File uploaded successfully', 200
+    return 'Invalid file type', 400
+
+
+
 #<------------------------------------------------INVESTORS ROUTES--------------------------------------------------------------------->
 
 @app.route('/investors')
@@ -108,6 +169,35 @@ def add_investor():
         return redirect(url_for('home'))
 
     return render_template('add_investor.html')
+
+@app.route('/upload_investor_file/<investor_id>', methods=['POST'])
+@login_required
+def upload_investor_file(investor_id):
+    if 'file' not in request.files:
+        return 'No file part', 400
+
+    file = request.files['file']
+    if file.filename == '':
+        return 'No selected file', 400
+
+    if file and allowed_file(file.filename):
+        # Create a directory path like 'uploads/user/investor/{investor_id}/'
+        upload_folder = os.path.join(app.config['UPLOAD_FOLDER'], 'user', 'investor', str(investor_id))
+        os.makedirs(upload_folder, exist_ok=True)
+
+        # Save file
+        filename = os.path.join(upload_folder, file.filename)
+        file.save(filename)
+
+        # Optionally, save the file path to the database
+        # investor = Investor.query.get(investor_id)
+        # investor.document_file_path = filename
+        # db.session.commit()
+
+        return 'File uploaded successfully', 200
+    return 'Invalid file type', 400
+
+
 
 #<----------------------------------------------PROPERTIES ROUTES--------------------------------------------------------------------->
 

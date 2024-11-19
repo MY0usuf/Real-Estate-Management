@@ -18,6 +18,7 @@ class Investor(db.Model):
     properties = db.relationship('Property', backref='owner', lazy=True, cascade='all, delete-orphan')
     user_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
     user = db.relationship('User', backref=db.backref('investors', lazy=True))
+    document = db.Column(db.String(120), nullable=True)
 
 class Tenant(db.Model):
     id = db.Column(db.String, primary_key=True)
@@ -33,6 +34,7 @@ class Tenant(db.Model):
     security_deposit = db.Column(db.Integer, nullable=False)
     property_id = db.Column(db.String, db.ForeignKey('property.id'), nullable=False)
     is_current_tenant = db.Column(db.Boolean, default=True)
+    document = db.Column(db.String(120), nullable=True)
 
 class Property(db.Model):
     id = db.Column(db.String, primary_key=True)
@@ -43,3 +45,4 @@ class Property(db.Model):
     price = db.Column(db.Float, nullable=False)
     tenant = db.relationship('Tenant', backref='property', lazy=True, cascade='all, delete-orphan')
     owner_id = db.Column(db.String, db.ForeignKey('investor.id'), nullable=False)
+    document = db.Column(db.String(120), nullable=True)

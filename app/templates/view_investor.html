@@ -5,6 +5,10 @@
 
 {% block content %}
 <h2>{{ investor.name }}</h2>
+<form action="{{ url_for('upload_file', entity_type='investor', entity_id=investor.id) }}" method="POST" enctype="multipart/form-data">
+    <input type="file" name="file">
+    <button type="submit">Upload File</button>
+</form>
 <hr>
 <h1>Property Details</h1>
 {% for property in investor.properties %}
