@@ -6,3 +6,5 @@ __pycache__/
 *.db
 routes/__pycache__/routes.cpython-312.pyc
 /routes/__pycache__
+*.pyc
+routes/__pycache__/routes.cpython-312.pyc
