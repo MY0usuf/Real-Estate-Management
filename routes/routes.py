@@ -191,34 +191,6 @@ def add_investor():
 
     return render_template('add_investor.html')
 
-@app.route('/upload_investor_file/<investor_id>', methods=['POST'])
-@login_required
-def upload_investor_file(investor_id):
-    if 'file' not in request.files:
-        return 'No file part', 400
-
-    file = request.files['file']
-    if file.filename == '':
-        return 'No selected file', 400
-
-    if file and allowed_file(file.filename):
-        # Create a directory path like 'uploads/user/investor/{investor_id}/'
-        upload_folder = os.path.join(app.config['UPLOAD_FOLDER'], 'user', 'investor', str(investor_id))
-        os.makedirs(upload_folder, exist_ok=True)
-
-        # Save file
-        filename = os.path.join(upload_folder, file.filename)
-        file.save(filename)
-
-        # Optionally, save the file path to the database
-        # investor = Investor.query.get(investor_id)
-        # investor.document_file_path = filename
-        # db.session.commit()
-
-        return 'File uploaded successfully', 200
-    return 'Invalid file type', 400
-
-
 
 #<----------------------------------------------PROPERTIES ROUTES--------------------------------------------------------------------->
 
