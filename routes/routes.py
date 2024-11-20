@@ -14,6 +14,11 @@ def load_user(user_id):
 def allowed_file(filename):
     return '.' in filename and filename.rsplit('.', 1)[1].lower() in app.config['ALLOWED_EXTENSIONS']
 
+@app.template_filter('format_number')
+def format_number(value):
+    if value is None:
+        return "0"
+    return f"{int(value):,}"
 
 # ----------------------------------------User Authentication Routes----------------------------------
 @app.route('/login', methods=['GET', 'POST'])
