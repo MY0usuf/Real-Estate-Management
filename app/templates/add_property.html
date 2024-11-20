@@ -10,31 +10,6 @@
         </div>
 
         <div class="row mb-3">
-            <div class="col-sm-2"><label for="building_name">Building Name:</label></div>
-            <div class="col-sm-1"><input type="text" id="building_name" name="building_name" required></div>
-        </div>
-
-        <div class="row mb-3">
-            <div class="col-sm-2"><label for="unit_no">Unit No:</label></div>
-            <div class="col-sm-1"><input type="text" id="unit_no" name="unit_no" required></div>
-        </div>
-
-        <div class="row mb-3">
-            <div class="col-sm-2"><label for="bedrooms">Number of Bedrooms:</label></div>
-            <div class="col-sm-1"><input type="number" id="bedrooms" name="bedrooms" required></div>
-        </div>
-
-        <div class="row mb-3">
-            <div class="col-sm-2"><label for="square_feet">Square Feet:</label></div>
-            <div class="col-sm-1"><input type="number" id="square_feet" name="square_feet" required></div>
-        </div>
-
-        <div class="row mb-3">
-            <div class="col-sm-2"><label for="price">Price:</label></div>
-            <div class="col-sm-1"><input type="number" id="price" name="price" required></div>
-        </div>
-
-        <div class="row mb-3">
             <div class="col-sm-2"><label for="owner_id">Owner ID:</label></div>
             <div class="col-sm-1">
                 <select id="owner_id" name="owner_id" required>
@@ -47,4 +22,41 @@
 
         <button type="submit" class="btn btn-primary">Add Property</button>
     </form>
+
+    <form method="POST" class="row g-3">
+        <div class="col-12">
+            <label for="building_name" class="form-label">Building Name *</label>
+            <input type="text" class="form-control" id="building_name" name="building_name" placeholder="MYKA Residence" required>
+        </div>
+        <div class="col-md-3">
+          <label for="unit_no" class="form-label">Unit Number *</label>
+          <input type="number" class="form-control" id="unit_no" name="unit_no" required>
+        </div>
+        <div class="col-md-3">
+          <label for="square_feet" class="form-label">Area in sq ft *</label>
+          <input type="number" class="form-control" id="square_feet" name="square_feet" placeholder="890" required>
+        </div>
+        <div class="col-md-3">
+            <label for="bedrooms" class="form-label">Number of Bedrooms *</label>
+            <input type="number" class="form-control" id="bedrooms" name="bedrooms" required>
+        </div>
+        <div class="col-md-3">
+            <label for="price" class="form-label">Price *</label>
+            <input type="number" class="form-control" id="price" name="price" required>
+        </div>
+        <div class="col-md-4">
+          <label for="owner_id" class="form-label">Owner ID</label>
+          <select id="owner_id" name="owner_id" class="form-select" required>
+              <option selected>Choose</option>
+            {% for investor in investors %}
+                    <option value="{{ investor.name }}">{{ investor.name }}</option>
+            {% endfor %}
+          </select>
+        </div>
+        <div class="col-md-4">
+            <label for="property_id" class="form-label">Property ID *</label>
+            <input type="tex" class="form-control" id="property_id" name="property_id" required>
+        </div>
+        <button type="submit" class="btn btn-primary">Add Property</button>
+      </form>
 {% endblock %}
