@@ -20,6 +20,9 @@ def format_number(value):
         return "0"
     return f"{int(value):,}"
 
+@app.template_filter('format_date')
+def format_date(date):
+    return date.strftime('%d/%m/%Y')
 # ----------------------------------------User Authentication Routes----------------------------------
 @app.route('/login', methods=['GET', 'POST'])
 def login():
@@ -244,7 +247,8 @@ def tenants():
     investors = Investor.query.all()
     properties = Property.query.all()
     tenants = Tenant.query.all()
-    return render_template('tenants.html', investors=investors, properties=properties, tenants=tenants)
+    today = datetime.today().date() 
+    return render_template('tenants.html', investors=investors, properties=properties, tenants=tenants, today=today)
 
 @app.route('/add_tenant', methods=['GET', 'POST'])
 @login_required

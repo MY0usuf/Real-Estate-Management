@@ -12,7 +12,7 @@
       <div class="col-md-6 mb-4">
         <div class="card p-4 shadow-sm border rounded">
           <div class="d-flex justify-content-between align-items-center mb-3">
-            <span class="badge bg-{{ 'success' if not property.tenant else 'secondary' }}">
+            <span class="badge rounded-pill bg-{{ 'danger' if not property.tenant else 'success' }}">
               {{ 'Vacant' if not property.tenant else 'Rented' }}
             </span>
           </div>
