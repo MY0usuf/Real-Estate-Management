@@ -3,60 +3,109 @@
 {% block title %}Property Management{% endblock %}
 {% block header %}Add Property Details{% endblock %}
 {% block content %}
-    <form method="POST" action="{{ url_for('add_property') }}">
-        <div class="row mb-3">
-            <div class="col-sm-2"><label for="property_id">Property Id:</label></div>
-            <div class="col-sm-1"><input type="text" id="property_id" name="property_id" required></div>
-        </div>
 
-        <div class="row mb-3">
-            <div class="col-sm-2"><label for="owner_id">Owner ID:</label></div>
-            <div class="col-sm-1">
-                <select id="owner_id" name="owner_id" required>
-                    {% for investor in investors %}
-                        <option value="{{ investor.id }}">{{ investor.name }}</option>
-                    {% endfor %}
-                </select>
-            </div>
-        </div>
-
-        <button type="submit" class="btn btn-primary">Add Property</button>
-    </form>
-
-    <form method="POST" class="row g-3">
+    <form method="POST" class="row g-3 needs-validation" action="{{ url_for('add_property') }}" novalidate>
         <div class="col-12">
-            <label for="building_name" class="form-label">Building Name *</label>
-            <input type="text" class="form-control" id="building_name" name="building_name" placeholder="MYKA Residence" required>
+            <label for="building_name" class="form-label ">Building Name *</label>
+            <input type="text" class="form-control " id="building_name" name="building_name" placeholder="MYKA Residence" required>
+            <div class="valid-feedback">
+                Looks good!
+              </div>          
+            <div class="invalid-feedback">
+                Please provide a valid Building Name
+              </div>          
         </div>
         <div class="col-md-3">
           <label for="unit_no" class="form-label">Unit Number *</label>
-          <input type="number" class="form-control" id="unit_no" name="unit_no" required>
+          <input type="text" class="form-control validation_required" id="unit_no" name="unit_no" required>
+          <div class="valid-feedback">
+            Looks good!
+          </div>          
+            <div class="invalid-feedback">
+            Please provide a valid Unit Number
+          </div>  
         </div>
         <div class="col-md-3">
           <label for="square_feet" class="form-label">Area in sq ft *</label>
-          <input type="number" class="form-control" id="square_feet" name="square_feet" placeholder="890" required>
+          <input type="number" class="form-control validation_required" id="square_feet" name="square_feet" placeholder="890" required>
+            <div class="valid-feedback">
+                Looks good!
+            </div>          
+            <div class="invalid-feedback">
+                Please Enter a number
+            </div>  
         </div>
         <div class="col-md-3">
             <label for="bedrooms" class="form-label">Number of Bedrooms *</label>
-            <input type="number" class="form-control" id="bedrooms" name="bedrooms" required>
+            <input type="text" class="form-control validation_required" id="bedrooms" name="bedrooms" required>
+            <div class="valid-feedback">
+                Looks good!
+            </div>          
+            <div class="invalid-feedback">
+                Please Enter a valid number
+            </div>  
         </div>
         <div class="col-md-3">
             <label for="price" class="form-label">Price *</label>
-            <input type="number" class="form-control" id="price" name="price" required>
+            <input type="number" class="form-control validation_required" id="price" name="price" required>
+            <div class="valid-feedback">
+                Looks good!
+            </div>          
+            <div class="invalid-feedback">
+                Please Enter a number
+            </div>  
         </div>
         <div class="col-md-4">
           <label for="owner_id" class="form-label">Owner ID</label>
           <select id="owner_id" name="owner_id" class="form-select" required>
-              <option selected>Choose</option>
+              <option selected  value="" >Choose</option>
             {% for investor in investors %}
                     <option value="{{ investor.name }}">{{ investor.name }}</option>
             {% endfor %}
           </select>
+            <div class="valid-feedback">
+                Looks good!
+            </div>          
+            <div class="invalid-feedback">
+                Please Enter valid property id
+            </div> 
         </div>
         <div class="col-md-4">
             <label for="property_id" class="form-label">Property ID *</label>
-            <input type="tex" class="form-control" id="property_id" name="property_id" required>
+            <input type="text" class="form-control" id="property_id" name="property_id" required>
+            <div class="valid-feedback">
+                Looks good!
+            </div>          
+            <div class="invalid-feedback">
+                Please Enter valid property id
+            </div>  
         </div>
         <button type="submit" class="btn btn-primary">Add Property</button>
       </form>
+
+      <script>
+      // Example starter JavaScript for disabling form submissions if there are invalid fields
+            (() => {
+            'use strict'
+
+            // Fetch all the forms we want to apply custom Bootstrap validation styles to
+            const forms = document.querySelectorAll('.needs-validation')
+
+            // Loop over them and prevent submission
+            Array.from(forms).forEach(form => {
+                form.addEventListener('submit', event => {
+                if (!form.checkValidity()) {
+                    event.preventDefault()
+                    event.stopPropagation()
+                }
+
+                form.classList.add('was-validated')
+                }, false)
+            })
+            })()
+
+
+
+    </script>
+    
 {% endblock %}
