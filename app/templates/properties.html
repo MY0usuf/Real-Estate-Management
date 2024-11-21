@@ -4,12 +4,31 @@
 {% block header %}Properties{% endblock %}
 
 {% block content %}
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <!-- Search Bar -->
+    <div class="input-group" style="max-width: 300px;">
+        <input type="text" class="form-control" id="search-input" placeholder="Search">
+        <button class="btn btn-outline-secondary" type="button" onclick="handleSearch()">Search</button>
+    </div>
+
+    <!-- Filters Button -->
+    <button class="btn btn-outline-primary" id="filters-btn" onclick="handleFilters()">
+        <i class="bi bi-filter-circle"></i> Filters
+    </button>
+
+    <!-- Add Property Button -->
+    <button class="btn btn-outline-success" onclick="window.location.href='/add_property'">
+        <i class="bi bi-plus-circle"></i> Add a Property
+    </button>
+</div>
+
+
 {% for investor in investors %}
 <h2>{{ investor.name }}</h2>
 <div class="container">
   <div class="row">
     {% for property in investor.properties %}
-      <div class="col-md-6 mb-4">
+      <div class="col-md-6 mb-4 property-row"">
         <div class="card p-4 shadow-sm border rounded">
           <div class="d-flex justify-content-between align-items-center mb-3">
             <span class="badge rounded-pill bg-{{ 'danger' if not property.tenant else 'success' }}">
@@ -41,5 +60,17 @@
   </div>
 </div>
 {% endfor %}
+<script>
+// Handle Real-Time Search
+document.getElementById("search-input").addEventListener("input", function () {
+    const searchInput = this.value.toLowerCase(); // Get the input value
+    const propertyRows = document.querySelectorAll(".property-row"); // Replace with your property row class
+    
+    propertyRows.forEach(row => {
+        const textContent = row.textContent.toLowerCase();
+        row.style.display = textContent.includes(searchInput) ? "" : "none";
+    });
+});
+</script>
 
 {% endblock %}
