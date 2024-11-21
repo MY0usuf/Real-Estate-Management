@@ -8,13 +8,57 @@
     <!-- Search Bar -->
     <div class="input-group" style="max-width: 300px;">
         <input type="text" class="form-control" id="search-input" placeholder="Search">
-        <button class="btn btn-outline-secondary" type="button" onclick="handleSearch()">Search</button>
+        <div class="dropdown">
+            <button class="btn btn-secondary dropdown-toggle" type="button" id="filterDropdown" data-bs-toggle="dropdown" aria-expanded="false">
+              Filters
+            </button>
+            <ul class="dropdown-menu p-3" aria-labelledby="filterDropdown">
+              <li>
+                <div class="form-check">
+                  <input class="form-check-input filter-checkbox" type="checkbox" value="rented" id="filterRented">
+                  <label class="form-check-label" for="filterRented">Rented</label>
+                </div>
+              </li>
+              <li>
+                <div class="form-check">
+                  <input class="form-check-input filter-checkbox" type="checkbox" value="vacant" id="filterVacant">
+                  <label class="form-check-label" for="filterVacant">Vacant</label>
+                </div>
+              </li>
+              <li>
+                <div class="form-check">
+                  <input class="form-check-input filter-checkbox" type="checkbox" value="apartment" id="filterApartment">
+                  <label class="form-check-label" for="filterApartment">Apartment</label>
+                </div>
+              </li>
+              <li>
+                <div class="form-check">
+                  <input class="form-check-input filter-checkbox" type="checkbox" value="office" id="filterOffice">
+                  <label class="form-check-label" for="filterOffice">Office</label>
+                </div>
+              </li>
+              <li>
+                <div class="form-check">
+                  <input class="form-check-input filter-checkbox" type="checkbox" value="shop" id="filterShop">
+                  <label class="form-check-label" for="filterShop">Shop</label>
+                </div>
+              </li>
+              <li>
+                <div class="form-check">
+                  <input class="form-check-input filter-checkbox" type="checkbox" value="villa" id="filterVilla">
+                  <label class="form-check-label" for="filterVilla">Villa</label>
+                </div>
+              </li>
+              <li>
+                <div class="form-check">
+                  <input class="form-check-input filter-checkbox" type="checkbox" value="land" id="filterLand">
+                  <label class="form-check-label" for="filterLand">Land</label>
+                </div>
+              </li>
+            </ul>
+          </div>          
     </div>
 
-    <!-- Filters Button -->
-    <button class="btn btn-outline-primary" id="filters-btn" onclick="handleFilters()">
-        <i class="bi bi-filter-circle"></i> Filters
-    </button>
 
     <!-- Add Property Button -->
     <button class="btn btn-outline-success" onclick="window.location.href='/add_property'">
@@ -22,55 +66,73 @@
     </button>
 </div>
 
-
 {% for investor in investors %}
-<h2>{{ investor.name }}</h2>
-<div class="container">
-  <div class="row">
-    {% for property in investor.properties %}
-      <div class="col-md-6 mb-4 property-row"">
-        <div class="card p-4 shadow-sm border rounded">
-          <div class="d-flex justify-content-between align-items-center mb-3">
-            <span class="badge rounded-pill bg-{{ 'danger' if not property.tenant else 'success' }}">
-              {{ 'Vacant' if not property.tenant else 'Rented' }}
-            </span>
-          </div>
-          <h4 class="card-title text-primary">
-            <i class="bi bi-house-door"></i> {{ property.building_name }} 
-          </h4>
-          <h5><p class="mb-1">{{ property.unit_no }}</p></h5>
-          {% if property.tenant %}
-            {% for tenant in property.tenant %}
-            <p class="mb-1">Occupied by: {{ tenant.name }}</p>
-            <div class="d-flex justify-content-between">
-              <p class="text-muted">Rent excluding tax and expenses</p>
-              <h5 class="fw-bold">AED {{ tenant.rental_amount | format_number }}</h5>
+<div class="investor">
+    <h2>{{ investor.name }}</h2>
+    <div class="container">
+    <div class="row">
+        {% for property in investor.properties %}
+        <div class="col-md-6 mb-4 property-row">
+            <div class="card p-4 shadow-sm border rounded">
+            <div class="d-flex justify-content-between align-items-center mb-3">
+                <span class="badge rounded-pill bg-{{ 'danger' if not property.tenant else 'success' }}">
+                {{ 'Vacant' if not property.tenant else 'Rented' }}
+                </span>
             </div>
-            {% endfor %}
-          {% else %}
-            <p class="mb-1 text-muted">No current tenant</p>
-            <div class="d-flex justify-content-between">
-              <p class="text-muted">Rent excluding tax and expenses</p>
-              <h5 class="fw-bold">AED 0</h5>
+            <h4 class="card-title text-primary">
+                <i class="bi bi-house-door"></i> {{ property.building_name }} 
+            </h4>
+            <h5><p class="mb-1">{{ property.unit_no }}</p></h5>
+            {% if property.tenant %}
+                {% for tenant in property.tenant %}
+                <p class="mb-1">Occupied by: {{ tenant.name }}</p>
+                <div class="d-flex justify-content-between">
+                <p class="text-muted">Rent excluding tax and expenses</p>
+                <h5 class="fw-bold">AED {{ tenant.rental_amount | format_number }}</h5>
+                </div>
+                {% endfor %}
+            {% else %}
+                <p class="mb-1 text-muted">No current tenant</p>
+                <div class="d-flex justify-content-between">
+                <p class="text-muted">Rent excluding tax and expenses</p>
+                <h5 class="fw-bold">AED 0</h5>
+                </div>
+            {% endif %}
             </div>
-          {% endif %}
         </div>
-      </div>
-    {% endfor %}
-  </div>
+        {% endfor %}
+    </div>
+    </div>
 </div>
 {% endfor %}
 <script>
-// Handle Real-Time Search
 document.getElementById("search-input").addEventListener("input", function () {
-    const searchInput = this.value.toLowerCase(); // Get the input value
-    const propertyRows = document.querySelectorAll(".property-row"); // Replace with your property row class
-    
-    propertyRows.forEach(row => {
-        const textContent = row.textContent.toLowerCase();
-        row.style.display = textContent.includes(searchInput) ? "" : "none";
+    const searchTerm = this.value.toLowerCase();
+    const investors = document.querySelectorAll(".investor");
+
+    investors.forEach(investor => {
+        const properties = investor.querySelectorAll(".property-row");
+        let hasMatch = false;
+
+        properties.forEach(property => {
+            const propertyName = property.textContent.toLowerCase();
+            if (propertyName.includes(searchTerm)) {
+                property.style.display = ""; // Show matching property
+                hasMatch = true;
+            } else {
+                property.style.display = "none"; // Hide non-matching property
+            }
+        });
+
+        // Hide or show the investor based on matching properties
+        if (hasMatch) {
+            investor.style.display = ""; // Show investor
+        } else {
+            investor.style.display = "none"; // Hide investor
+        }
     });
 });
+
 </script>
 
 {% endblock %}
