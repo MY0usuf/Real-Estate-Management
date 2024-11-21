@@ -15,6 +15,20 @@
           0% { opacity: 1; }
           100% { opacity: 0; display: none; }
       }
+            /* Add padding to the sidebar */
+            #sidebarMenu {
+          padding: 20px;  /* You can adjust this padding as needed */
+      }
+
+      /* Add padding to each sidebar item */
+      #sidebarMenu .nav-item {
+          padding: 10px 0;  /* Adds vertical padding to each nav item */
+      }
+
+      /* Add padding inside dropdown menu */
+      #sidebarMenu .dropdown-menu {
+          padding: 10px;  /* Adds padding inside the dropdown */
+      }
   </style>
   </head>
   <body>
@@ -43,64 +57,37 @@
                         </a>
                       </li>
                       <li class="nav-item">
-                          <a class="nav-link dropdown-toggle {% if request.path in [url_for('investors'), url_for('add_investor')] %}active{% endif %}" id="investorsDropdown" role="button" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                          <a class="nav-link  {% if request.path == url_for('investors') %}active{% endif %}"  role="button"  aria-haspopup="true" aria-expanded="false" href="/investors">
                             Investors
                           </a>
-                        <div class="dropdown-menu" aria-labelledby="investorsDropdown">
-                          <a class="dropdown-item" href="/investors">All Investors</a>
-                          <a class="dropdown-item" href="/add_investor">Add Investor</a>
-                            {% for investor in investors %}
-                              <a class="dropdown-item" href="/view_investor/{{ investor.id }}">{{ investor.name }}</a>
-                            {% endfor %}
-                        </div>
                       </li>
                       <li class="nav-item">
-                        <a class="nav-link dropdown-toggle {% if request.path in [url_for('properties'), url_for('add_property')] %}active{% endif %}" id="propertiesDropdown" role="button" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                        <a class="nav-link {% if request.path == url_for('properties') %}active{% endif %}"  href="/properties" role="button" aria-haspopup="true" aria-expanded="false">
                           Properties
                         </a>
-                        <div class="dropdown-menu" aria-labelledby="propertiesDropdown">
-                          <a class="dropdown-item" href="/properties">All Properties</a>
-                          <a class="dropdown-item" href="/add_property">Add Property</a>
-                          {% for investor in investors %}
-                            {% for property in investor.properties %}
-                              <a class="dropdown-item" href="/view_property/{{ property.id }}">{{ property.id }} ( {{investor.name}} )</a>
-                            {% endfor %}
-                          {% endfor %}
-                        </div>
                       </li>
                       <li class="nav-item">
-                        <a class="nav-link dropdown-toggle {% if request.path in [url_for('tenants'), url_for('add_tenant')] %}active{% endif %}" href="/tenants" id="tenantsDropdown" role="button" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                        <a class="nav-link {% if request.path == url_for('tenants') %}active{% endif %}" href="/tenants"  role="button" aria-haspopup="true" aria-expanded="false">
                           Tenants
                         </a>
-                        <div class="dropdown-menu" aria-labelledby="tenantsDropdown">
-                          <a class="dropdown-item" href="/tenants">All Tenants</a>
-                          <a class="dropdown-item" href="/add_tenant">Add Tenant</a>
-                          {% for investor in investors %}
-                            {% for property in investor.properties %}
-                              {% for tenant in property.tenant %}
-                              <a class="dropdown-item" href="/view_tenant/{{ tenant.id }}">{{ tenant.name }} ( {{ tenant.id }},{{ investor.name }} )</a>
-                              {% endfor %}
-                            {% endfor %}
-                          {% endfor %}
-                        </div>
                       </li>
                     </ul>
                 </div>
             </nav>
             <main class="col-md-9 ms-sm-auto col-lg-10 px-md-4">
+              <!-- Flash Message Display -->
+              {% with messages = get_flashed_messages(with_categories=true) %}
+              {% if messages %}
+                <div>
+                  {% for category, message in messages %}
+                    <div class="alert alert-{{ category }}">{{ message }}</div>
+                  {% endfor %}
+                </div>
+              {% endif %}
+              {% endwith %}
                 <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
                   <h1 class="h1">{% block header %}{% endblock %}</h1>
                 </div>
-                <!-- Flash Message Display -->
-                {% with messages = get_flashed_messages(with_categories=true) %}
-                {% if messages %}
-                  <div>
-                    {% for category, message in messages %}
-                      <div class="alert alert-{{ category }}">{{ message }}</div>
-                    {% endfor %}
-                  </div>
-                {% endif %}
-                {% endwith %}
                 {% block content %}{% endblock %}
             </main>
         </div>
