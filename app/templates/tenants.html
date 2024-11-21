@@ -70,10 +70,10 @@
 <div class="investor">
     <h2>{{ investor.name }}</h2>
     <div class="container">
-        <div class="row mb-4">
+        <div class="row">
             {% for property in investor.properties %}
                 {% for tenant in property.tenant %}
-                    <div class="col-md-4 tenant-card"      
+                    <div class="col-md-4 mb-4 tenant-card"      
                     data-name="{{ tenant.name | lower }}" 
                     data-building="{{ tenant.property.building_name | lower }}" 
                     data-unit="{{ tenant.property.unit_no | lower }}">
@@ -91,7 +91,7 @@
                             <span class="badge rounded-pill bg-{{ 'success' }}">Lease Running</span>
                         {% endif %}
                         </div>
-                        <h4 class="card-title text-primary">{{ tenant.name }}</h4>
+                        <h4 class="card-title text-primary" href="/view_tenant/{{ tenant.id }}">{{ tenant.name }}</h4>
                         <h5><p> {{ tenant.property.building_name }}, {{ tenant.property.unit_no }}</p></h5>
                         <p> From {{ tenant.contract_start_date | format_date }} to {{ tenant.contract_end_date | format_date }}</p>
                         <div class="d-flex justify-content-between">
@@ -108,9 +108,9 @@
                         </div>
                         </div>
                     </div>
+                  </div>
                 {% endfor %}
             {% endfor %}
-        </div>
     </div>
 </div>
 {% endfor %}
