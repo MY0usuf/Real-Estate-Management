@@ -2,9 +2,125 @@
 
 {% block title %}Tenant Details{% endblock %}
 {% block header %}Tenant Details{% endblock %}
-
+{% block style %}
+    <style>
+        .nav-buttons button {
+            font-weight: bold;
+            padding: 10px 15px;
+            width: 100%; /* Ensure buttons span the full width of their container */
+        }
+        .nav-buttons {
+            display: grid; /* Use grid layout for button container */
+            grid-template-columns: repeat(5, 1fr); /* Split buttons into 5 equal columns */
+            gap: 10px; /* Add spacing between buttons */
+            margin-bottom: 30px; /* Space between buttons and content below */
+        }
+        .nav-tabs .nav-link.active {
+            background-color: #007bff;
+            color: white;
+        }
+        .summary-card {
+            background-color: #f8f9fa;
+            padding: 15px;
+            border-radius: 5px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+    </style>
+{% endblock %}
 {% block content %}
 <h2>{{ tenant.name }}</h2>
+<div class="container-fluid">
+    <!-- Navigation Buttons (Full Width) -->
+    <div class="nav-buttons mb-4">
+        <button class="btn btn-outline-secondary" onclick="window.history.back()">
+            <i class="bi bi-arrow-left"></i> Back
+        </button>
+        <button class="btn btn-outline-danger">
+            <i class="bi bi-trash"></i> Delete
+        </button>
+        <button class="btn btn-outline-warning">
+            <i class="bi bi-x-circle"></i> Terminate
+        </button>
+        <button class="btn btn-outline-primary">
+            <i class="bi bi-pencil-square"></i> Edit
+        </button>
+        <button class="btn btn-outline-success">
+            <i class="bi bi-clock"></i> Schedule
+        </button>
+    </div>
+
+    <div class="container mt-4">
+        <div class="row">
+            <!-- Left Column (Tenant Details + Tabs) -->
+            <div class="col-md-8">
+
+                <!-- Tabs -->
+                <ul class="nav nav-tabs" id="tenantTabs" role="tablist">
+                    <li class="nav-item" role="presentation">
+                        <button class="nav-link active" id="tenant-tab" data-bs-toggle="tab" data-bs-target="#tenant" type="button" role="tab" aria-controls="tenant" aria-selected="true">Tenant</button>
+                    </li>
+                    <li class="nav-item" role="presentation">
+                        <button class="nav-link" id="lease-tab" data-bs-toggle="tab" data-bs-target="#lease" type="button" role="tab" aria-controls="lease" aria-selected="false">Lease</button>
+                    </li>
+                    <li class="nav-item" role="presentation">
+                        <button class="nav-link" id="billing-tab" data-bs-toggle="tab" data-bs-target="#billing" type="button" role="tab" aria-controls="billing" aria-selected="false">Billing</button>
+                    </li>
+                    <li class="nav-item" role="presentation">
+                        <button class="nav-link" id="documents-tab" data-bs-toggle="tab" data-bs-target="#documents" type="button" role="tab" aria-controls="documents" aria-selected="false">Documents</button>
+                    </li>
+                </ul>
+
+                <!-- Tab Content -->
+                <div class="tab-content">
+                    <!-- Tenant Tab -->
+                    <div class="tab-pane fade show active" id="tenant" role="tabpanel" aria-labelledby="tenant-tab">
+                        <h4 class="mt-4">Tenant Information</h4>
+                        <p><strong>Name:</strong> Amar</p>
+                        <p><strong>The tenant belongs to:</strong> A personal account</p>
+
+                        <h5 class="mt-4">Address</h5>
+                        <p><strong>Street 1:</strong> myka</p>
+                        <p><strong>City:</strong> Dubai</p>
+                        <p><strong>Zip Code:</strong> 300166</p>
+                    </div>
+
+                    <!-- Other Tabs Placeholder -->
+                    <div class="tab-pane fade" id="lease" role="tabpanel" aria-labelledby="lease-tab">
+                        <p>Lease information will be displayed here.</p>
+                    </div>
+                    <div class="tab-pane fade" id="billing" role="tabpanel" aria-labelledby="billing-tab">
+                        <p>Billing details will be displayed here.</p>
+                    </div>
+                    <div class="tab-pane fade" id="documents" role="tabpanel" aria-labelledby="documents-tab">
+                        <p>Documents will be displayed here.</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Right Column (Lease Summary + Rental Summary) -->
+            <div class="col-md-4">
+                <!-- Lease Summary -->
+                <div class="summary-card mb-3">
+                    <h6>Lease</h6>
+                    <p><strong>Status:</strong> In progress</p>
+                    <p><strong>Start date:</strong> 11/07/2024</p>
+                    <p><strong>End date:</strong> 11/06/2025</p>
+                    <p><strong>Deposit:</strong> AED 5,000.00</p>
+                </div>
+
+                <!-- Rental Summary -->
+                <div class="summary-card">
+                    <h6>Rental</h6>
+                    <p><strong>Rent:</strong> AED 80,000.00</p>
+                    <p><strong>Expenses:</strong> AED 13,000.00</p>
+                    <p><strong>Total:</strong> AED 93,000.00</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- File Upload Form -->
 <form action="{{ url_for('upload_file', entity_type='tenant', entity_id=tenant.id) }}" method="POST" enctype="multipart/form-data">
     <input type="file" name="file" required>
     <input type="text" name="filename" placeholder="Optional: Enter a custom filename">
@@ -16,6 +132,8 @@
     </select>
     <button type="submit">Upload File</button>
 </form>
+
+<!-- Tenant Contact Information -->
 <p>Contact Number: {{ tenant.contact_number }}</p>
 <p>Email Address: {{ tenant.email_address }}</p>
 <p>Passport Number: {{ tenant.passport_number }}</p>
