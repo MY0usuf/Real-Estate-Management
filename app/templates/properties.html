@@ -73,7 +73,7 @@
     <div class="row">
         {% for property in investor.properties %}
         <div class="col-md-6 mb-4 property-row">
-            <div class="card p-4 shadow-sm border rounded">
+            <div class="card p-4 shadow-sm border rounded" onclick="window.location.href='/view_property/{{ property.id }}'" style="cursor: pointer;">
             <div class="d-flex justify-content-between align-items-center mb-3">
                 <span class="badge rounded-pill bg-{{ 'danger' if not property.tenant else 'success' }}">
                 {{ 'Vacant' if not property.tenant else 'Rented' }}
