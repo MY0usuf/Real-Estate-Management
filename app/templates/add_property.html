@@ -60,7 +60,7 @@
           <select id="owner_id" name="owner_id" class="form-select" required>
               <option selected  value="" >Choose</option>
             {% for investor in investors %}
-                    <option value="{{ investor.name }}">{{ investor.name }}</option>
+                    <option value="{{ investor.id }}">{{ investor.name }}</option>
             {% endfor %}
           </select>
             <div class="valid-feedback">
