@@ -28,7 +28,6 @@
     </style>
 {% endblock %}
 {% block content %}
-<h2>{{ tenant.name }}</h2>
 <div class="container-fluid">
     <!-- Navigation Buttons (Full Width) -->
     <div class="nav-buttons mb-4">
@@ -75,13 +74,56 @@
                     <!-- Tenant Tab -->
                     <div class="tab-pane fade show active" id="tenant" role="tabpanel" aria-labelledby="tenant-tab">
                         <h4 class="mt-4">Tenant Information</h4>
-                        <p><strong>Name:</strong> Amar</p>
-                        <p><strong>The tenant belongs to:</strong> A personal account</p>
-
-                        <h5 class="mt-4">Address</h5>
-                        <p><strong>Street 1:</strong> myka</p>
-                        <p><strong>City:</strong> Dubai</p>
-                        <p><strong>Zip Code:</strong> 300166</p>
+                        <form method="POST" class="row g-3">
+                            <div class="col-12">
+                                <label for="name" class="form-label">Name</label>
+                                <input type="text" class="form-control" id="name" name="name" placeholder="{{ tenant.name }}" disabled>
+                            </div>
+                            <div class="col-md-6">
+                              <label for="contact_number" class="form-label">Contact No</label>
+                              <input type="text" class="form-control" id="contact_number" name="contact_number" placeholder="{{ tenant.contact_number }}" disabled>
+                            </div>
+                            <div class="col-md-6">
+                              <label for="email_address" class="form-label">Email Address</label>
+                              <input type="email" class="form-control" id="email_address" name="email_address" placeholder="{{ tenant.email_address }}" disabled>
+                            </div>
+                            <div class="col-md-6">
+                                <label for="passport_number" class="form-label">Passport No</label>
+                                <input type="text" class="form-control" id="passport_number" name="passport_number" placeholder="{{ tenant.passport_number }}" disabled>
+                            </div>
+                              <div class="col-md-6">
+                                <label for="emirates_id_number" class="form-label">Emirates ID Number</label>
+                                <input type="text" class="form-control" id="emirates_id_number" name="emirates_id_number" placeholder="{{ tenant.emirates_id_number }}" disabled>
+                            </div>
+                            <div class="col-md-6">
+                                <label for="contract_start_date" class="form-label">Contract Start Date</label>
+                                <input type="text" class="form-control" id="contract_start_date" name="contract_start_date" placeholder="{{ tenant.contract_start_date | format_date}}" disabled>
+                            </div>
+                              <div class="col-md-6">
+                                <label for="contract_end_date" class="form-label">Contract End Date</label>
+                                <input type="text" class="form-control" id="contract_end_date" name="contract_end_date" placeholder="{{ tenant.contract_end_date | format_date}}" disabled>
+                            </div>
+                            <div class="col-md-6">
+                                <label for="rental_amount" class="form-label">Rental Amount</label>
+                                <input type="text" class="form-control" id="rental_amount" name="rental_amount" placeholder="{{ tenant.rental_amount }}" disabled>
+                            </div>
+                            <div class="col-md-3">
+                                <label for="no_of_cheques" class="form-label">No Of Cheques</label>
+                                <input type="text" class="form-control" id="no_of_cheques" name="no_of_cheques" placeholder="{{ tenant.no_of_cheques }}" disabled>
+                            </div>
+                            <div class="col-md-3">
+                                <label for="security_deposit" class="form-label">Deposit</label>
+                                <input type="text" class="form-control" id="security_deposit" name="security_deposit" placeholder="{{ tenant.security_deposit }}" disabled>
+                            </div>
+                            <div class="col-md-4">
+                              <label for="inputState" class="form-label">Property</label>
+                              <input type="text" class="form-control" id="property.id" name="property.id" placeholder="{{ tenant.property_id }}" disabled>
+                            </div>
+                            <div class="col-md-4">
+                                <label for="tenant_id" class="form-label">Tenant ID</label>
+                                <input type="text" class="form-control" id="tenant_id" name="tenant_id" placeholder="{{ tenant.id }}" disabled>
+                            </div>
+                          </form>
                     </div>
 
                     <!-- Other Tabs Placeholder -->
@@ -101,11 +143,19 @@
             <div class="col-md-4">
                 <!-- Lease Summary -->
                 <div class="summary-card mb-3">
+                    {% set start_date = tenant.contract_start_date %}
+                    {% set end_date = tenant.contract_end_date %}
+                    {% set today = today %}
+                    {% if tenant.contract_end_date > today %}
+                        {% set status = "In Progress" %}
+                    {% else %}
+                        {% set status = "Expired" %}
+                    {% endif %}
                     <h6>Lease</h6>
-                    <p><strong>Status:</strong> In progress</p>
-                    <p><strong>Start date:</strong> 11/07/2024</p>
-                    <p><strong>End date:</strong> 11/06/2025</p>
-                    <p><strong>Deposit:</strong> AED 5,000.00</p>
+                    <p><strong>Status:</strong> {{ status }}</p>
+                    <p><strong>Start date:</strong> {{ tenant.contract_start_date | format_date }}</p>
+                    <p><strong>End date:</strong> {{ tenant.contract_end_date | format_date }}</p>
+                    <p><strong>Deposit:</strong> AED {{ tenant.security_deposit | format_number }}</p>
                 </div>
 
                 <!-- Rental Summary -->
@@ -132,19 +182,6 @@
     </select>
     <button type="submit">Upload File</button>
 </form>
-
-<!-- Tenant Contact Information -->
-<p>Contact Number: {{ tenant.contact_number }}</p>
-<p>Email Address: {{ tenant.email_address }}</p>
-<p>Passport Number: {{ tenant.passport_number }}</p>
-<p>Emirates ID Number: {{ tenant.emirates_id_number }}</p>
-<p>Contract Start Date: {{ tenant.contract_start_date }}</p>
-<p>Contract End Date: {{ tenant.contract_end_date }}</p>
-<p>No of Cheques: {{ tenant.no_of_cheques }}</p>
-<p>Rental Amount (AED): {{ tenant.rental_amount }}</p>
-<p>Security Deposit (AED): {{ tenant.security_deposit }}</p>
-
-<!-- Add more tenant details as needed -->
 
 <a href="{{ url_for('renew_tenant', tenant_id=tenant.id) }}">Renew Tenant</a>
 {% endblock %}

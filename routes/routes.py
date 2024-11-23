@@ -335,4 +335,5 @@ def view_tenant(tenant_id):
     properties = Property.query.all()
     tenants = Tenant.query.all()
     tenant = Tenant.query.get_or_404(tenant_id)
-    return render_template('view_tenant.html', tenant=tenant, investors=investors, properties=properties, tenants=tenants)
+    today = datetime.today().date()
+    return render_template('view_tenant.html', tenant=tenant, investors=investors, properties=properties, tenants=tenants, today=today)
