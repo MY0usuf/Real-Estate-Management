@@ -335,5 +335,10 @@ def view_tenant(tenant_id):
     properties = Property.query.all()
     tenants = Tenant.query.all()
     tenant = Tenant.query.get_or_404(tenant_id)
+    # Fetch the property associated with the tenant
+    property = Property.query.filter_by(id=tenant.property_id).first()  # Adjust `property_id` field name as per your model
+
+    # Fetch the investor associated with the property
+    investor = Investor.query.filter_by(id=property.owner_id).first() 
     today = datetime.today().date()
-    return render_template('view_tenant.html', tenant=tenant, investors=investors, properties=properties, tenants=tenants, today=today)
+    return render_template('view_tenant.html', tenant=tenant, investor=investor, property=property, tenants=tenants, today=today)
