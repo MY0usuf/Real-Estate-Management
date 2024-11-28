@@ -39,7 +39,7 @@
         </div>
         <div class="col-md-3">
             <label for="no_of_cheques" class="form-label">No Of Cheques</label>
-            <input type="text" class="form-control" id="no_of_cheques" name="no_of_cheques">
+            <input type="text" class="form-control" id="no_of_cheques" name="no_of_cheques" min="1" max="12">
         </div>
         <div class="col-md-3">
             <label for="security_deposit" class="form-label">Deposit</label>
@@ -63,7 +63,59 @@
             <label for="tenant_id" class="form-label">Tenant ID</label>
             <input type="tex" class="form-control" id="tenant_id" name="tenant_id" required>
         </div>
+        <div class="col-md-6">
+          <button type="button" class="btn btn-primary" id="add_cheques_button">Add Cheques</button>
+        </div>
+        <div id="cheque_fields" class="col-12">
+        </div>
         <button type="submit" class="btn btn-primary">Add Tenant</button>
       </form>
 
+      <script>
+        const addChequesButton = document.getElementById('add_cheques_button');
+        const chequeFieldsDiv = document.getElementById('cheque_fields');
+        const maxCheques = 12;
+    
+        addChequesButton.addEventListener('click', () => {
+            const numCheques = parseInt(document.getElementById('no_of_cheques').value);
+    
+            if (isNaN(numCheques) || numCheques < 1 || numCheques > maxCheques) {
+                alert(`Please enter a number between 1 and ${maxCheques}.`);
+                return;
+            }
+    
+            chequeFieldsDiv.innerHTML = ''; // Clear existing fields
+    
+            for (let i = 0; i < numCheques; i++) {
+                // Create a new div for each cheque
+                const chequeGroup = document.createElement('div');
+                chequeGroup.classList.add('row', 'mb-3');
+    
+                chequeGroup.innerHTML = `
+                    <h4 class="col-12">Cheque ${i + 1}</h4>
+                    <div class="col-md-3">
+                        <label>Cheque Number:</label>
+                        <input type="text" class="form-control" name="cheques[${i}][cheque_number]" required>
+                    </div>
+                    <div class="col-md-3">
+                        <label>Amount:</label>
+                        <input type="number" step="0.01" class="form-control" name="cheques[${i}][amount]" required>
+                    </div>
+                    <div class="col-md-3">
+                        <label>Issue Date:</label>
+                        <input type="date" class="form-control" name="cheques[${i}][issue_date]" required>
+                    </div>
+                    <div class="col-md-3">
+                        <label>Due Date:</label>
+                        <input type="date" class="form-control" name="cheques[${i}][due_date]" required>
+                    </div>
+                `;
+    
+                // Append the new group to the container
+                chequeFieldsDiv.appendChild(chequeGroup);
+            }
+        });
+    </script>
+    
+    
 {% endblock %}
