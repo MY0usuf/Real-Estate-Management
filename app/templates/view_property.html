@@ -2,39 +2,187 @@
 
 {% block title %}Property Details{% endblock %}
 {% block header %}Property Details{% endblock %}
-
+{% block style %}
+    <style>
+        .nav-buttons button {
+            font-weight: bold;
+            padding: 10px 15px;
+            width: 100%; /* Ensure buttons span the full width of their container */
+        }
+        .nav-buttons {
+            display: grid; /* Use grid layout for button container */
+            grid-template-columns: repeat(6, 1fr); /* Split buttons into 6 equal columns */
+            gap: 10px; /* Add spacing between buttons */
+            margin-bottom: 30px; /* Space between buttons and content below */
+        }
+        .nav-tabs .nav-link.active {
+            background-color: #007bff;
+            color: white;
+        }
+        .summary-card {
+            background-color: #f8f9fa;
+            padding: 15px;
+            border-radius: 5px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+    </style>
+{% endblock %}
 {% block content %}
-<h2>{{ property.id }}</h2>
-<form action="{{ url_for('upload_file', entity_type='property', entity_id=property.id) }}" method="POST" enctype="multipart/form-data">
-    <input type="file" name="file" required>
-    <input type="text" name="filename" placeholder="Optional: Enter a custom filename">
-    <select name="file_tag" required>
-        <option value="id_documents">Title deed</option>
-        <option value="id_documents">Contracts</option>
-        <option value="miscellaneous">Miscellaneous</option>
-        <!-- Add more options as needed -->
-    </select>
-    <button type="submit">Upload File</button>
-</form>
-<p>Building Name {{ property.building_name }}</p>
-<p>Unit No: {{ property.unit_no }}</p>
-<p>Size (Sq.Ft): {{ property.square_feet }}</p>
-<p>No of Bedrooms: {{ property.bedrooms }}</p>
-<p>Original Price (AED): {{ property.price }}</p>
-<hr>
-{% for tenant in property.tenant %}
-    <h1>Current Tenant</h1>
-    <h2>{{ tenant.name }}</h2>
-    <p>Contact Number: {{ tenant.contact_number }}</p>
-    <p>Email Address: {{ tenant.email_address }}</p>
-    <p>Passport Number: {{ tenant.passport_number }}</p>
-    <p>Emirates ID Number: {{ tenant.emirates_id_number }}</p>
-    <p>Contract Start Date: {{ tenant.contract_start_date }}</p>
-    <p>Contract End Date: {{ tenant.contract_end_date }}</p>
-    <p>No of Cheques: {{ tenant.no_of_cheques }}</p>
-    <p>Rental Amount (AED): {{ tenant.rental_amount }}</p>
-    <p>Security Deposit (AED): {{ tenant.security_deposit }}</p>
-{% endfor %}
-<!-- Add more tenant details as needed -->
+<div class="container-fluid">
+    <!-- Navigation Buttons (Full Width) -->
+    <div class="nav-buttons mb-4">
+        <button class="btn btn-outline-secondary" onclick="window.history.back()">
+            <i class="bi bi-arrow-left"></i> Back
+        </button>
+        <button class="btn btn-outline-danger">
+            <i class="bi bi-trash"></i> Delete
+        </button>
+        <button class="btn btn-outline-primary">
+            <i class="bi bi-pencil-square"></i> Edit
+        </button>
+    </div>
 
+    <div class="container mt-4">
+        <div class="row">
+            <!-- Left Column (Property Details + Tabs) -->
+            <div class="col-md-8">
+
+                <!-- Tabs -->
+                <ul class="nav nav-tabs" id="propertyTabs" role="tablist">
+                    <li class="nav-item" role="presentation">
+                        <button class="nav-link active" id="property-tab" data-bs-toggle="tab" data-bs-target="#property" type="button" role="tab" aria-controls="property" aria-selected="true">Property</button>
+                    </li>
+                    <li class="nav-item" role="presentation">
+                        <button class="nav-link" id="tenant-tab" data-bs-toggle="tab" data-bs-target="#tenant" type="button" role="tab" aria-controls="tenant" aria-selected="false">Tenant</button>
+                    </li>
+                    <li class="nav-item" role="presentation">
+                        <button class="nav-link" id="documents-tab" data-bs-toggle="tab" data-bs-target="#documents" type="button" role="tab" aria-controls="documents" aria-selected="false">Documents</button>
+                    </li>
+                </ul>
+
+                <!-- Tab Content -->
+                <div class="tab-content">
+                    <!-- Property Tab -->
+                    <div class="tab-pane fade show active" id="property" role="tabpanel" aria-labelledby="property-tab">
+                        <br>
+                        <form method="POST" class="row g-3">
+                            <div class="col-md-6">
+                                <label for="building_name" class="form-label">Building Name</label>
+                                <input type="text" class="form-control" id="building_name" name="building_name" placeholder="{{ property.building_name }}" disabled>
+                            </div>
+                            <div class="col-md-6">
+                                <label for="unit_no" class="form-label">Unit No</label>
+                                <input type="text" class="form-control" id="unit_no" name="unit_no" placeholder="{{ property.unit_no }}" disabled>
+                            </div>
+                            <div class="col-md-6">
+                                <label for="square_feet" class="form-label">Size (Sq.Ft)</label>
+                                <input type="text" class="form-control" id="square_feet" name="square_feet" placeholder="{{ property.square_feet }}" disabled>
+                            </div>
+                            <div class="col-md-6">
+                                <label for="bedrooms" class="form-label">No of Bedrooms</label>
+                                <input type="text" class="form-control" id="bedrooms" name="bedrooms" placeholder="{{ property.bedrooms }}" disabled>
+                            </div>
+                            <div class="col-md-6">
+                                <label for="price" class="form-label">Original Price (AED)</label>
+                                <input type="text" class="form-control" id="price" name="price" placeholder="{{ property.price }}" disabled>
+                            </div>
+                        </form>
+                    </div>
+
+                    <!-- Tenant Tab -->
+                    <div class="tab-pane fade" id="tenant" role="tabpanel" aria-labelledby="tenant-tab">
+                        <br>
+                        <h3>Current Tenant</h3>
+                        {% if property.tenant %}
+                            {% for tenant in property.tenant %}
+                            <form method="POST" class="row g-3">
+                                <div class="col-12">
+                                    <label for="name" class="form-label">Name</label>
+                                    <input type="text" class="form-control" id="name" name="name" placeholder="{{ tenant.name }}" disabled>
+                                </div>
+                                <div class="col-md-6">
+                                <label for="contact_number" class="form-label">Contact No</label>
+                                <input type="text" class="form-control" id="contact_number" name="contact_number" placeholder="{{ tenant.contact_number }}" disabled>
+                                </div>
+                                <div class="col-md-6">
+                                <label for="email_address" class="form-label">Email Address</label>
+                                <input type="email" class="form-control" id="email_address" name="email_address" placeholder="{{ tenant.email_address }}" disabled>
+                                </div>
+                                <div class="col-md-6">
+                                    <label for="passport_number" class="form-label">Passport No</label>
+                                    <input type="text" class="form-control" id="passport_number" name="passport_number" placeholder="{{ tenant.passport_number }}" disabled>
+                                </div>
+                                <div class="col-md-6">
+                                    <label for="emirates_id_number" class="form-label">Emirates ID Number</label>
+                                    <input type="text" class="form-control" id="emirates_id_number" name="emirates_id_number" placeholder="{{ tenant.emirates_id_number }}" disabled>
+                                </div>
+                                <div class="col-md-6">
+                                    <label for="contract_start_date" class="form-label">Contract Start Date</label>
+                                    <input type="text" class="form-control" id="contract_start_date" name="contract_start_date" placeholder="{{ tenant.contract_start_date | format_date}}" disabled>
+                                </div>
+                                <div class="col-md-6">
+                                    <label for="contract_end_date" class="form-label">Contract End Date</label>
+                                    <input type="text" class="form-control" id="contract_end_date" name="contract_end_date" placeholder="{{ tenant.contract_end_date | format_date}}" disabled>
+                                </div>
+                                <div class="col-md-6">
+                                    <label for="rental_amount" class="form-label">Rental Amount</label>
+                                    <input type="text" class="form-control" id="rental_amount" name="rental_amount" placeholder="{{ tenant.rental_amount }}" disabled>
+                                </div>
+                                <div class="col-md-3">
+                                    <label for="no_of_cheques" class="form-label">No Of Cheques</label>
+                                    <input type="text" class="form-control" id="no_of_cheques" name="no_of_cheques" placeholder="{{ tenant.no_of_cheques }}" disabled>
+                                </div>
+                                <div class="col-md-3">
+                                    <label for="security_deposit" class="form-label">Deposit</label>
+                                    <input type="text" class="form-control" id="security_deposit" name="security_deposit" placeholder="{{ tenant.security_deposit }}" disabled>
+                                </div>
+                                <div class="col-md-4">
+                                <label for="inputState" class="form-label">Property</label>
+                                <input type="text" class="form-control" id="property.id" name="property.id" placeholder="{{ tenant.property_id }}" disabled>
+                                </div>
+                                <div class="col-md-4">
+                                    <label for="tenant_id" class="form-label">Tenant ID</label>
+                                    <input type="text" class="form-control" id="tenant_id" name="tenant_id" placeholder="{{ tenant.id }}" disabled>
+                                </div>
+                            </form>
+                            {% endfor %}
+                        {% else %}
+                            <h3>No tenant right now</h3>
+                        {% endif %}
+                    </div>
+
+                    <!-- Documents Tab -->
+                    <div class="tab-pane fade" id="documents" role="tabpanel" aria-labelledby="documents-tab">
+                        <br>
+                        <!-- File Upload Form -->
+                        <form action="{{ url_for('upload_file', entity_type='property', entity_id=property.id) }}" method="POST" enctype="multipart/form-data">
+                            <input type="file" name="file" required>
+                            <input type="text" name="filename" placeholder="Optional: Enter a custom filename">
+                            <select name="file_tag" required>
+                                <option value="id_documents">Title deed</option>
+                                <option value="id_documents">Contracts</option>
+                                <option value="miscellaneous">Miscellaneous</option>
+                            </select>
+                            <button type="submit">Upload File</button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Right Column (Property Summary) -->
+            <div class="col-md-4">
+                <!-- Property Summary -->
+                <div class="summary-card">
+                    <h6>Property Summary</h6>
+                    <p><strong>Building Name:</strong> {{ property.building_name }}</p>
+                    <p><strong>Unit No:</strong> {{ property.unit_no }}</p>
+                    <p><strong>Size (Sq.Ft):</strong> {{ property.square_feet }}</p>
+                    <p><strong>Bedrooms:</strong> {{ property.bedrooms }}</p>
+                    <p><strong>Original Price (AED):</strong> AED {{ property.price | format_number }}</p>
+                    <p><strong>Status:</strong> {% if property.tenant %}Rented{% else %}Vacant{% endif %}</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
 {% endblock %}
