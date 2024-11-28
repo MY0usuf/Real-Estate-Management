@@ -38,6 +38,16 @@ class Tenant(db.Model):
     property_id = db.Column(db.String, db.ForeignKey('property.id'), nullable=False)
     is_current_tenant = db.Column(db.Boolean, default=True)
     document = db.Column(db.String(120), nullable=True)
+    cheque = db.relationship('Cheque', backref='tenant', lazy=True, cascade="all, delete-orphan")
+
+class Cheque(db.Model):
+    __tablename__ = 'cheque'
+    id = db.Column(db.Integer, primary_key=True)
+    cheque_number = db.Column(db.String(50), nullable=False)
+    amount = db.Column(db.Float, nullable=False)
+    due_date = db.Column(db.Date, nullable=False)
+    status = db.Column(db.String(20), default='Pending')  # e.g., 'Pending', 'Cleared', 'Bounced'
+    tenant_id = db.Column(db.String, db.ForeignKey('tenant.id'), nullable=False)
 
 class Property(db.Model):
     __tablename__ = 'property'

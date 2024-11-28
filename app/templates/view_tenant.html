@@ -178,6 +178,37 @@
                     </div>
                     <div class="tab-pane fade" id="billing" role="tabpanel" aria-labelledby="billing-tab">
                         <p>Billing details will be displayed here.</p>
+                        <h3>Billing</h3>
+                        <div class="table-responsive">
+                            <table class="table table-striped">
+                                <thead>
+                                    <tr>
+                                        <th>Cheque Number</th>
+                                        <th>Amount</th>
+                                        <th>Due Date</th>
+                                        <th>Status</th>
+                                        <th>Actions</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {% for cheque in tenant.cheque %}
+                                        <tr>
+                                            <td>{{ cheque.cheque_number }}</td>
+                                            <td>AED {{ cheque.amount | format_number }}</td>
+                                            <td>{{ cheque.due_date | format_date }}</td>
+                                            <td>{{ cheque.status }}</td>
+                                            <td>
+                                                
+                                            </td>
+                                        </tr>
+                                    {% else %}
+                                        <tr>
+                                            <td colspan="5" class="text-center">No cheques available for this tenant.</td>
+                                        </tr>
+                                    {% endfor %}
+                                </tbody>
+                            </table>
+                        </div>
                     </div>
                     <div class="tab-pane fade" id="documents" role="tabpanel" aria-labelledby="documents-tab">
                         <br>

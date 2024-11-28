@@ -2,7 +2,7 @@ from flask import flash, render_template, request, redirect, url_for, session
 import os
 from flask_login import LoginManager, login_user, login_required, logout_user, current_user
 from main import app, db
-from models.models import User, Investor, Tenant, Property
+from models.models import User, Investor, Tenant, Property, Cheque
 from datetime import datetime
 login_manager = LoginManager(app)
 login_manager.login_view = 'login'
@@ -276,6 +276,11 @@ def add_tenant():
         contract_start_date = datetime.strptime(contract_start_date, '%Y-%m-%d').date()
         contract_end_date = datetime.strptime(contract_end_date, '%Y-%m-%d').date()
 
+                # Get the cheques data from the form
+        cheques_data = request.form.getlist('cheques[0][cheque_number]')
+        cheque_amounts = request.form.getlist('cheques[0][amount]')
+        cheque_due_dates = request.form.getlist('cheques[0][due_date]')
+
         # Check if the property exists
         property_obj = Property.query.get(property_id)
         if not property_obj:
@@ -301,6 +306,24 @@ def add_tenant():
         # Add and commit to the database
         db.session.add(new_tenant)
         db.session.commit()
+
+                # Add the cheques to the database
+        for i in range(no_of_cheques):
+            cheque_number = cheques_data[i]
+            amount = cheque_amounts[i]
+            due_date = datetime.strptime(cheque_due_dates[i], '%Y-%m-%d').date()
+
+            # Create a new Cheque object
+            new_cheque = Cheque(
+                cheque_number=cheque_number,
+                amount=amount,
+                due_date=due_date,
+                tenant_id=new_tenant.id
+            )
+
+            # Add and commit cheque data
+            db.session.add(new_cheque)
+            db.session.commit()
 
         return redirect(url_for('home'))
 
