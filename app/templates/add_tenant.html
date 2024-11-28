@@ -4,7 +4,7 @@
 {% block header %}Add Tenant Details{% endblock %}
 {% block content %}
 
-    <form method="POST" class="row g-3">
+    <form method="POST" class="row g-3 justify-content-start">
         <div class="col-12">
             <label for="name" class="form-label">Name</label>
             <input type="text" class="form-control" id="name" name="name" placeholder="John Doe">
@@ -63,10 +63,11 @@
             <label for="tenant_id" class="form-label">Tenant ID</label>
             <input type="tex" class="form-control" id="tenant_id" name="tenant_id" required>
         </div>
+        <div id="cheque_fields" class="col-md-12">
+          
+        </div>
         <div class="col-md-6">
           <button type="button" class="btn btn-primary" id="add_cheques_button">Add Cheques</button>
-        </div>
-        <div id="cheque_fields" class="col-12">
         </div>
         <button type="submit" class="btn btn-primary">Add Tenant</button>
       </form>
@@ -74,48 +75,125 @@
       <script>
         const addChequesButton = document.getElementById('add_cheques_button');
         const chequeFieldsDiv = document.getElementById('cheque_fields');
-        const maxCheques = 12;
-    
+        let chequeCounter = 0; // Track the number of cheques dynamically
+      
+        // Event listener to add a new cheque
         addChequesButton.addEventListener('click', () => {
-            const numCheques = parseInt(document.getElementById('no_of_cheques').value);
-    
-            if (isNaN(numCheques) || numCheques < 1 || numCheques > maxCheques) {
-                alert(`Please enter a number between 1 and ${maxCheques}.`);
+            chequeCounter++; // Increment the counter for a new cheque
+      
+            // Disable the Add Cheque button
+            addChequesButton.disabled = true;
+      
+            // Create a new div for each cheque
+            const chequeGroup = document.createElement('div');
+            chequeGroup.classList.add('cheque-group');
+            chequeGroup.setAttribute('data-id', chequeCounter); // Use a data attribute for consistent referencing
+      
+            chequeGroup.innerHTML = `
+            <div class="row g-3">
+                <h4 class="col-12 cheque-title">Cheque ${chequeCounter}</h4>
+                <div class="col-md-3">
+                    <label>Cheque Number:</label>
+                    <input type="text" class="form-control cheque-input" name="cheques[${chequeCounter}][cheque_number]" required>
+                </div>
+                <div class="col-md-3">
+                    <label>Amount:</label>
+                    <input type="number" step="0.01" class="form-control cheque-input" name="cheques[${chequeCounter}][amount]" required>
+                </div>
+                <div class="col-md-3">
+                    <label>Issue Date:</label>
+                    <input type="date" class="form-control cheque-input" name="cheques[${chequeCounter}][issue_date]" required>
+                </div>
+                <div class="col-md-3">
+                    <label>Due Date:</label>
+                    <input type="date" class="form-control cheque-input" name="cheques[${chequeCounter}][due_date]" required>
+                </div>
+                <div class="col-md-12">
+                    <button type="button" class="btn btn-danger remove-cheque-button">Remove Cheque</button>
+                    <br><br>
+                </div>
+              </div>
+            `;
+      
+            // Append the new group to the container
+            chequeFieldsDiv.appendChild(chequeGroup);
+      
+            // Attach a remove listener directly to the new button
+            chequeGroup.querySelector('.remove-cheque-button').addEventListener('click', (event) => {
+                handleRemoveCheque(event, chequeGroup);
+            });
+      
+            // Enable the Add Cheque button only after all inputs in the latest cheque group are filled
+            const chequeInputs = chequeGroup.querySelectorAll('.cheque-input');
+            chequeInputs.forEach(input => {
+                input.addEventListener('input', () => {
+                    const allFilled = Array.from(chequeInputs).every(input => input.value.trim() !== '');
+                    addChequesButton.disabled = !allFilled;
+                });
+            });
+        });
+      
+        // Function to handle cheque removal
+        function handleRemoveCheque(event, chequeGroup) {
+            const button = event.target;
+            button.disabled = true; // Temporarily disable the button
+      
+            setTimeout(() => {
+                // Perform the removal after the delay
+                removeCheque(chequeGroup);
+      
+                // Check if any existing cheques are incomplete and adjust the button state
+                updateAddChequeButtonState();
+            }, 100); // Simulated delay for safer DOM operations
+        }
+      
+        // Function to remove a cheque field dynamically
+        function removeCheque(chequeGroup) {
+            chequeFieldsDiv.removeChild(chequeGroup); // Remove the specific cheque group
+            renumberCheques(); // Renumber remaining cheques
+        }
+      
+        // Function to renumber all cheque fields dynamically
+        function renumberCheques() {
+            const existingCheques = chequeFieldsDiv.querySelectorAll('.cheque-group');
+      
+            if (existingCheques.length === 0) {
+                // Reset the counter if no cheques remain
+                chequeCounter = 0;
                 return;
             }
-    
-            chequeFieldsDiv.innerHTML = ''; // Clear existing fields
-    
-            for (let i = 0; i < numCheques; i++) {
-                // Create a new div for each cheque
-                const chequeGroup = document.createElement('div');
-                chequeGroup.classList.add('row', 'mb-3');
-    
-                chequeGroup.innerHTML = `
-                    <h4 class="col-12">Cheque ${i + 1}</h4>
-                    <div class="col-md-3">
-                        <label>Cheque Number:</label>
-                        <input type="text" class="form-control" name="cheques[${i}][cheque_number]" required>
-                    </div>
-                    <div class="col-md-3">
-                        <label>Amount:</label>
-                        <input type="number" step="0.01" class="form-control" name="cheques[${i}][amount]" required>
-                    </div>
-                    <div class="col-md-3">
-                        <label>Issue Date:</label>
-                        <input type="date" class="form-control" name="cheques[${i}][issue_date]" required>
-                    </div>
-                    <div class="col-md-3">
-                        <label>Due Date:</label>
-                        <input type="date" class="form-control" name="cheques[${i}][due_date]" required>
-                    </div>
-                `;
-    
-                // Append the new group to the container
-                chequeFieldsDiv.appendChild(chequeGroup);
-            }
-        });
-    </script>
-    
+      
+            existingCheques.forEach((chequeGroup, index) => {
+                const newIndex = index + 1; // Start numbering from 1
+                chequeGroup.setAttribute('data-id', newIndex);
+      
+                // Update the title
+                const title = chequeGroup.querySelector('.cheque-title');
+                title.textContent = `Cheque ${newIndex}`;
+      
+                // Update input names to reflect the new index
+                chequeGroup.querySelectorAll('input').forEach(input => {
+                    const name = input.name.replace(/\[\d+\]/, `[${newIndex}]`);
+                    input.name = name;
+                });
+            });
+      
+            chequeCounter = existingCheques.length; // Update the counter to match the remaining cheques
+        }
+      
+        // Function to update the Add Cheque button state based on existing cheques
+        function updateAddChequeButtonState() {
+            const existingCheques = chequeFieldsDiv.querySelectorAll('.cheque-group');
+            const anyIncompleteCheque = Array.from(existingCheques).some(chequeGroup => {
+                const inputs = chequeGroup.querySelectorAll('.cheque-input');
+                return Array.from(inputs).some(input => input.value.trim() === '');
+            });
+      
+            // Disable the button if any cheque group is incomplete
+            addChequesButton.disabled = anyIncompleteCheque;
+        }
+      </script>
+      
+      
     
 {% endblock %}
