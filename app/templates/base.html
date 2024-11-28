@@ -10,6 +10,9 @@
       .alert {
           animation: fadeOut 5s forwards;
       }
+      .nav-link:hover{
+        background-color: rgb(143, 159, 249);
+      }
   
       @keyframes fadeOut {
           0% { opacity: 1; }
@@ -64,12 +67,12 @@
                           </a>
                       </li>
                       <li class="nav-item">
-                        <a class="nav-link {% if request.path == url_for('properties') %}active{% endif %}"  href="/properties" role="button" aria-haspopup="true" aria-expanded="false">
+                        <a class="nav-link {% if request.endpoint in ['properties','view_property','add_property'] %}active{% endif %}"  href="/properties" role="button" aria-haspopup="true" aria-expanded="false">
                           Properties
                         </a>
                       </li>
                       <li class="nav-item">
-                        <a class="nav-link {% if request.path == url_for('tenants') %}active{% endif %}" href="/tenants"  role="button" aria-haspopup="true" aria-expanded="false">
+                        <a class="nav-link {% if request.endpoint in ['tenants','view_tenant','add_tenant'] %}active{% endif %}" href="/tenants"  role="button" aria-haspopup="true" aria-expanded="false">
                           Tenants
                         </a>
                       </li>

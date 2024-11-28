@@ -2,7 +2,18 @@
 
 {% block title %}Property Management{% endblock %}
 {% block header %}Properties{% endblock %}
+{% block style %}
+    <style>
+        /* Hover effect for tenant cards */
+        .property-row {
+            transition: all 0.3s ease; /* Smooth transition */
+        }
 
+        .property-row:hover {
+            background-color: rgb(241, 243, 255); /* Slightly darker background */
+        }
+    </style>
+{% endblock %}
 {% block content %}
 <div class="d-flex justify-content-between align-items-center mb-4">
     <!-- Search Bar -->
@@ -72,8 +83,8 @@
     <div class="container">
     <div class="row">
         {% for property in investor.properties %}
-        <div class="col-md-6 mb-4 property-row">
-            <div class="card p-4 shadow-sm border rounded" onclick="window.location.href='/view_property/{{ property.id }}'" style="cursor: pointer;">
+        <div class="col-md-6 mb-4 ">
+            <div class="card p-4 shadow-sm border rounded property-row" onclick="window.location.href='/view_property/{{ property.id }}'" style="cursor: pointer;">
             <div class="d-flex justify-content-between align-items-center mb-3">
                 <span class="badge rounded-pill bg-{{ 'danger' if not property.tenant else 'success' }}">
                 {{ 'Vacant' if not property.tenant else 'Rented' }}

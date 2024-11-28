@@ -3,6 +3,19 @@
 {% block title %}Tenant Management{% endblock %}
 {% block header %}Tenants{% endblock %}
 
+{% block style %}
+    <style>
+        /* Hover effect for tenant cards */
+        .tenant-card {
+            transition: all 0.3s ease; /* Smooth transition */
+        }
+
+        .tenant-card:hover {
+            background-color: rgb(241, 243, 255); /* Slightly darker background */
+        }
+    </style>
+{% endblock %}
+
 {% block content %}
 <div class="d-flex justify-content-between align-items-center mb-4">
     <!-- Search Bar -->
@@ -73,11 +86,11 @@
         <div class="row">
             {% for property in investor.properties %}
                 {% for tenant in property.tenant %}
-                    <div class="col-md-4 mb-4 tenant-card" onclick="window.location.href='/view_tenant/{{ tenant.id }}'" style="cursor: pointer;"     
+                    <div class="col-md-4 mb-4 " onclick="window.location.href='/view_tenant/{{ tenant.id }}'" style="cursor: pointer;"     
                     data-name="{{ tenant.name | lower }}" 
                     data-building="{{ tenant.property.building_name | lower }}" 
                     data-unit="{{ tenant.property.unit_no | lower }}">
-                    <div class="card p-4 shadow-sm border rounded">
+                    <div class="card p-4 shadow-sm border rounded tenant-card">
                         <div class="d-flex justify-content-between align-items-center mb-3">
                         {% set start_date = tenant.contract_start_date %}
                         {% set end_date = tenant.contract_end_date %}
